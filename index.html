@@ -958,7 +958,10 @@
         }
 
         function createRadarChart(results) {
-            const ctx = document.getElementById('radarChart').getContext('2d');
+           const normalizedScores = pilares.map(p => {
+       const percentage = results[p].percentage;
+       return (percentage / 100) * 25;
+   });
             
             const data = {
                 labels: pilares.map(p => pilarNames[p]),
