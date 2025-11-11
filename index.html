@@ -34,22 +34,13 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         
-        .header-gradient {
-            background: #14233A;
-            color: white;
-            padding: 3rem 2rem;
-            border-radius: 1.5rem 1.5rem 0 0;
-            text-align: center;
-        }
-        
-        .logo {
-            font-size: 4rem;
-            font-style: italic;
-            font-family: serif;
-            margin-bottom: 1rem;
-            color: white;
-        }
-        
+       .header-gradient {
+    background: #14233A;
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 1.5rem 1.5rem 0 0;
+    text-align: center;
+}
         .subtitle {
             color: #E9C8C8;
             font-size: 1.2rem;
@@ -326,7 +317,7 @@
         }
         
         .text-center {
-            text-align: center;
+            text-align: left;
         }
         
         .flex-gap {
@@ -364,6 +355,75 @@
                 font-size: 1rem;
             }
         }
+      /* ---- Mostrar las opciones de respuesta en una fila horizontal ---- */
+.scale-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: nowrap;
+}
+
+.scale-option {
+  flex: 1 1 0;
+  text-align: center;
+}
+      /* ---- Alinear el texto de las afirmaciones a la izquierda ---- */
+.question-text {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+/* --- Logo lateral durante las secciones del test --- */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  text-align: left;
+}
+
+.section-header img.logo-lateral {
+  max-height: 70px;
+  width: auto;
+  height: auto;
+  flex-shrink: 0;
+}
+/* --- Encabezado azul para cada pilar del test --- */
+.test-pilar-header {
+  background: #14233A;
+  color: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.test-pilar-header img.logo-lateral {
+  max-height: 60px;
+  height: auto;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.test-pilar-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: white;
+}
+
+.test-pilar-header p {
+  margin: 0.25rem 0 0;
+  color: #E9C8C8;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+
     </style>
 </head>
 <body>
@@ -371,21 +431,25 @@
         <!-- Pantalla de Bienvenida Única -->
         <div id="welcomeScreen">
             <div class="card" style="border-radius: 1.5rem; overflow: hidden; padding: 0;">
-                <div class="header-gradient">
-                    <div class="logo">nw</div>
-                    <div class="subtitle">Neuro Wellness</div>
-                    <p class="tagline">Tu mapa hacia el bienestar integral</p>
-                </div>
+             <div class="header-gradient">
+    <img src="https://i.postimg.cc/0NtNP44W/Logo-Neuro-Wellness-Blanco-1.png"
+         alt="Logo NeuroWellness"
+         style="max-width: 200px; height: auto; display: block; margin: 10px auto 0;" />
+    
+    <p class="tagline" style="font-size: 1.2rem; margin-top: 0.25rem; color: #F0D6D0; font-weight: 500;">
+        Tu mapa hacia el bienestar integral
+    </p>
+</div>
 
                 <div style="padding: 2.5rem;">
                     <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
-                        <span style="font-size: 2rem;">✨</span>
-                        <h2>Bienvenida a tu Test de Neurobienestar</h2>
+                        <span style="font-size: 2rem; text-align: center"></span>
+                        <h2>¡Bienvenida a tu Test de Neurobienestar!</h2>
                     </div>
 
-                    <div style="space-y: 1.5rem;">
+                    <div style="space-y: 1.5rem; text-align: left;">
                         <p class="welcome-text">
-                            Este no es un examen. Es una <strong>conversación contigo misma</strong> — un momento para pausar, observar y reconocer dónde estás ahora.
+                            Este no es un examen. Es una <strong>conversación contigo misma</strong>, un momento para pausar, observar y reconocer dónde estás ahora.
                         </p>
 
                         <p class="welcome-text">
@@ -444,7 +508,12 @@
                     </div>
                 </div>
 
-                <div id="questionsContainer"></div>
+              <div id="questionsContainer"></div>
+
+
+ 
+      
+
 
                 <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                     <button class="btn btn-secondary" onclick="previousPilar()" id="prevBtn" style="display: none;">
@@ -457,171 +526,124 @@
             </div>
         </div>
 
-        <!-- Pantalla de Resultados -->
-        <div id="resultsScreen" class="hidden">
-            <div style="max-width: 1100px; margin: 0 auto; background: white; border-radius: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden;">
-                
-                <!-- Header con puntuación -->
-                <div style="background: #14233A; padding: 3rem 2rem; text-align: center;">
-                    <div style="font-size: 3rem; font-style: italic; font-family: serif; margin-bottom: 0.5rem; color: white;">nw</div>
-                    <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem; color: white;">
-                        <span id="userNameDisplay"></span>, aquí está tu Mapa de Neurobienestar
-                    </h1>
-                    <p style="color: #E9C8C8; margin-bottom: 2rem;">Tu punto de partida para la transformación</p>
-                    
-                    <div style="background: #E9C8C8; padding: 2rem; border-radius: 1rem; max-width: 500px; margin: 0 auto;">
-                        <p style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #14233A; margin-bottom: 0.5rem;">Puntuación Total</p>
-                        <p style="font-size: 3rem; font-weight: bold; color: #14233A;">
-                            <span id="totalScore">0</span><span style="font-size: 1.5rem; opacity: 0.7;">/100</span>
-                        </p>
-                        <p style="font-size: 0.9rem; color: #2B2E33; margin-bottom: 1.5rem;">puntos de neurobienestar</p>
-                        
-                        <!-- Mensaje motivacional -->
-                        <div id="overallMessage" style="border-top: 2px solid #14233A; padding-top: 1.5rem; margin-top: 1rem;"></div>
-                    </div>
-                </div>
-                
-                <div style="padding: 3rem 2rem;">
-                    
-                    <!-- Gráfico Radar -->
-                    <div style="background: #F7F4F1; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem;">
-                        <h2 style="font-size: 1.8rem; font-weight: bold; text-align: center; color: #14233A; margin-bottom: 2rem;">
-                            Tus 4 Pilares de Neurobienestar
-                        </h2>
-                        
-                        <div style="display: flex; justify-content: center; margin-bottom: 2rem; padding: 2rem;">
-                            <canvas id="radarChart" style="max-width: 600px; max-height: 600px; width: 100%;"></canvas>
-                        </div>
+      
 
-                        <div style="text-align: center; font-size: 0.9rem; color: #4A4D53; margin-bottom: 1.5rem;">
-                            <p style="font-weight: 600; margin-bottom: 1rem;">Cada pilar se evalúa de 0 a 25 puntos</p>
-                            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <div style="width: 1.25rem; height: 1.25rem; background: #9DB2A2; border-radius: 0.25rem;"></div>
-                                    <span style="font-weight: 500;">19-25: Fortaleza</span>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <div style="width: 1.25rem; height: 1.25rem; background: #D6C79A; border-radius: 0.25rem;"></div>
-                                    <span style="font-weight: 500;">13-18: Oportunidad</span>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <div style="width: 1.25rem; height: 1.25rem; background: #D99A8F; border-radius: 0.25rem;"></div>
-                                    <span style="font-weight: 500;">0-12: Prioridad</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tarjetas resumen -->
-                        <div id="pilarSummaries" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;"></div>
-                    </div>
-
-                    <!-- Mensaje instructivo -->
-                    <div style="text-align: center; background: #E9C8C8; padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem;">
-                        <p style="font-size: 1.1rem; font-weight: 600; color: #14233A;">
-                            A continuación, haz clic sobre cada pilar para ver a detalle lo que significan tus resultados:
-                        </p>
-                    </div>
-
-                    <!-- Análisis detallado por pilar (expandibles) -->
-                    <div id="detailedAnalysis"></div>
-
-                    <!-- CTA Final -->
-                    <div style="background: #14233A; color: white; padding: 2rem; border-radius: 1rem; text-align: center; margin-top: 2rem;">
-                        <h3 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; color: white;">
-                            <span id="ctaName"></span>, has dado el primer paso más importante: conocer tu mapa
-                        </h3>
-                        
-                        <div style="max-width: 600px; margin: 0 auto 2rem;">
-                            <p style="font-size: 1rem; margin-bottom: 1.5rem; color: #E9C8C8; line-height: 1.6;">
-                                Ahora tienes 2 opciones: guardar estos resultados y seguir con los mismos patrones, 
-                                o transformarlos en un plan de acción con acompañamiento profesional.
-                            </p>
-
-                            <div style="background: rgba(233, 200, 200, 0.15); border: 2px solid #9B6D80; border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1.5rem;">
-                                <div style="display: flex; align-items: flex-start; gap: 1rem;">
-                                    <span style="font-size: 1.5rem;">⏰</span>
-                                    <div style="text-align: left;">
-                                        <p style="font-weight: bold; margin-bottom: 0.5rem; color: white;">
-                                            Las próximas 72 horas son clave
-                                        </p>
-                                        <p style="font-size: 0.9rem; color: #E9C8C8;">
-                                            La motivación del autoconocimiento dura poco sin estructura. No dejes que estos insights se pierdan.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 500px; margin: 0 auto;">
-                            <button class="btn" style="background: #9B6D80; color: white; padding: 1rem 2rem; border-radius: 0.75rem; font-weight: 600; font-size: 1rem; width: 100%;">
-                                Sí, quiero mi Sesión de Valoración Gratuita
-                            </button>
-                            
-                            <button class="btn btn-secondary" style="width: 100%;">
-                                Descargar resultados en PDF
-                            </button>
-                        </div>
-
-                        <p style="font-size: 0.9rem; color: #E9C8C8; margin-top: 1rem;">
-                            ⏰ Solo 3 sesiones disponibles esta semana
-                        </p>
-                    </div>
-
-                    <!-- Créditos -->
-                    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #E6E2DE;">
-                        <div style="text-align: center; margin-bottom: 1.5rem;">
-                            <div style="font-size: 2rem; font-style: italic; font-family: serif; margin-bottom: 0.5rem; color: #14233A;">nw</div>
-                            <div style="font-size: 0.9rem; margin-bottom: 0.25rem; color: #9B6D80;">Neuro Wellness</div>
-                        </div>
-                        
-                        <div style="text-align: center; margin-bottom: 1.5rem;">
-                            <p style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.25rem; color: #4A4D53;">
-                                Test de Neurobienestar RESPIRAR
-                            </p>
-                            <p style="font-size: 0.9rem; margin-bottom: 0.75rem; color: #4A4D53;">Diseñado por</p>
-                            <h3 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.25rem; color: #14233A;">
-                                Maria Alejandra Urdaneta
-                            </h3>
-                            <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #9B6D80;">
-                                Neuropsicoeducadora
-                            </p>
-                            <p style="font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem; color: #14233A;">
-                                Neurowellness Learning
-                            </p>
-                        </div>
-
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: #4A4D53;">
-                            <a href="mailto:maria.urdaneta@neurowellnesslearning.com" style="color: #9B6D80; text-decoration: none;">
-                                📧 maria.urdaneta@neurowellnesslearning.com
-                            </a>
-                            <a href="https://www.neurowellnesslearning.com" target="_blank" style="color: #9B6D80; text-decoration: none;">
-                                🌐 www.neurowellnesslearning.com
-                            </a>
-                            <a href="https://instagram.com/soymarialeurdaneta" target="_blank" style="color: #9B6D80; text-decoration: none;">
-                                📱 @soymarialeurdaneta
-                            </a>
-                        </div>
-
-                        <div style="max-width: 600px; margin: 0 auto; padding-top: 1.5rem; border-top: 1px solid #E6E2DE;">
-                            <p style="font-size: 0.75rem; margin-bottom: 0.5rem; color: #4A4D53; text-align: center;">
-                                © 2025 Maria Alejandra Urdaneta. Todos los derechos reservados.
-                            </p>
-                            <p style="font-size: 0.75rem; line-height: 1.5; color: #4A4D53; text-align: center;">
-                                Este test y su metodología son propiedad intelectual protegida. 
-                                Prohibida su reproducción total o parcial sin autorización expresa.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="text-center" style="margin-top: 2rem;">
-                        <button class="btn btn-secondary" onclick="restartTest()" style="width: 100%; max-width: 400px;">
-                            Reiniciar Test
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+                   
     </div>
+<!-- Pantalla de Resultados -->
+<div id="resultsScreen" class="hidden">
+  <div style="max-width:1100px;margin:0 auto;background:white;border-radius:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.08);overflow:hidden;">
+
+    <!-- Header con puntuación -->
+    <div style="background:#14233A;padding:3rem 2rem;text-align:center;">
+      <img src="https://i.postimg.cc/0NtNP44W/Logo-Neuro-Wellness-Blanco-1.png"
+           alt="Logo NeuroWellness"
+           style="max-width:200px;height:auto;display:block;margin:0 auto 1rem;" />
+      <h2 style="color:#E9C8C8;margin-bottom:1rem;">Resultados del Test de Neurobienestar</h2>
+
+      <h1 style="font-size:1.6rem;font-weight:700;margin-bottom:0.75rem;color:white;">
+        <span id="userNameDisplay"></span>, aquí está tu Mapa de Neurobienestar
+      </h1>
+      <p style="color:#E9C8C8;margin-bottom:2rem;">Tu punto de partida para la transformación</p>
+
+      <div style="background:#E9C8C8;padding:1.5rem;border-radius:1rem;max-width:520px;margin:0 auto;">
+        <p style="font-size:0.9rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#14233A;margin-bottom:0.5rem;">Puntuación Total</p>
+        <p style="font-size:3rem;font-weight:800;color:#14233A;">
+          <span id="totalScore">0</span><span style="font-size:1.2rem;opacity:.7;">/100</span>
+        </p>
+        <p style="font-size:.9rem;color:#2B2E33;margin-bottom:1rem;">puntos de neurobienestar</p>
+        <div id="overallMessage" style="border-top:2px solid #14233A;padding-top:1rem;margin-top:.5rem;text-align:left;"></div>
+      </div>
+    </div>
+
+    <!-- Contenido principal resultados -->
+    <div style="padding:3rem 2rem;">
+
+      <!-- Radar -->
+      <div style="background:#F7F4F1;border-radius:1rem;padding:2rem;margin-bottom:2rem;">
+        <h2 style="font-size:1.8rem;font-weight:700;text-align:center;color:#14233A;margin-bottom:2rem;">Tus 4 Pilares de Neurobienestar</h2>
+        <div style="display:flex;justify-content:center;margin-bottom:2rem;padding:2rem;">
+          <canvas id="radarChart" style="max-width:600px;max-height:600px;width:100%;"></canvas>
+        </div>
+
+        <div style="text-align:center;font-size:.9rem;color:#4A4D53;margin-bottom:1.5rem;">
+          <p style="font-weight:600;margin-bottom:1rem;">Cada pilar se evalúa de 0 a 25 puntos</p>
+          <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:.5rem;"><div style="width:1.25rem;height:1.25rem;background:#9DB2A2;border-radius:.25rem;"></div><span style="font-weight:500;">19–25: Fortaleza</span></div>
+            <div style="display:flex;align-items:center;gap:.5rem;"><div style="width:1.25rem;height:1.25rem;background:#D6C79A;border-radius:.25rem;"></div><span style="font-weight:500;">13–18: Oportunidad</span></div>
+            <div style="display:flex;align-items:center;gap:.5rem;"><div style="width:1.25rem;height:1.25rem;background:#D99A8F;border-radius:.25rem;"></div><span style="font-weight:500;">0–12: Prioridad</span></div>
+          </div>
+        </div>
+
+        <!-- Tarjetas resumen por pilar -->
+        <div id="pilarSummaries" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;"></div>
+      </div>
+
+      <!-- Instrucción -->
+      <div style="text-align:center;background:#E9C8C8;padding:1.5rem;border-radius:1rem;margin-bottom:2rem;">
+        <p style="font-size:1.05rem;font-weight:600;color:#14233A;">A continuación, haz clic sobre cada pilar para ver a detalle lo que significan tus resultados:</p>
+      </div>
+
+      <!-- Detalle expandible -->
+      <div id="detailedAnalysis"></div>
+
+      <!-- CTA -->
+      <div style="background:#14233A;color:white;padding:2rem;border-radius:1rem;text-align:center;margin-top:2rem;">
+        <h3 style="font-size:1.4rem;font-weight:800;margin-bottom:1rem;color:white;">
+          <span id="ctaName"></span>, has dado el primer paso más importante: conocer tu mapa
+        </h3>
+        <div style="max-width:600px;margin:0 auto 1.5rem;">
+          <p style="font-size:1rem;margin-bottom:1rem;color:#E9C8C8;line-height:1.6;">
+            Ahora tienes 2 opciones: guardar estos resultados y seguir con los mismos patrones, o transformarlos en un plan de acción con acompañamiento profesional.
+          </p>
+          <div style="background:rgba(233,200,200,.15);border:2px solid #9B6D80;border-radius:.75rem;padding:1rem;margin-bottom:1rem;text-align:left;">
+            <div style="display:flex;align-items:flex-start;gap:1rem;">
+              <span style="font-size:1.5rem;">⏰</span>
+              <div>
+                <p style="font-weight:800;margin-bottom:.25rem;color:white;">Las próximas 72 horas son clave</p>
+                <p style="font-size:.9rem;color:#E9C8C8;">La motivación del autoconocimiento dura poco sin estructura. No dejes que estos insights se pierdan.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1rem;max-width:500px;margin:0 auto;">
+          <button class="btn" style="background:#9B6D80;color:white;padding:1rem 2rem;border-radius:.75rem;font-weight:600;font-size:1rem;width:100%;">Sí, quiero mi Sesión de Valoración Gratuita</button>
+         <div style="display:flex;flex-direction:column;gap:1rem;max-width:500px;margin:0 auto;">
+  <button class="btn btn-primary" style="width:100%;">Sí, quiero mi Sesión de Valoración Gratuita</button>
+  <button class="btn btn-secondary" style="width:100%;">Descargar resultados en PDF</button>
+</div>
+
+
+        <p style="font-size:.9rem;color:#E9C8C8;margin-top:1rem;">⏰ Solo 3 sesiones disponibles esta semana</p>
+      </div>
+      <!-- FIN del CTA azul -->
+
+      <!-- Créditos + firma con fondo BLANCO -->
+      <div style="background:white;margin-top:2rem;padding:2rem;border-radius:1rem;">
+        <div style="width:100%;text-align:center;margin-bottom:1rem;">
+          <img src="https://i.postimg.cc/Pf95fxbZ/Firma-Neuro-Wellness-Mariale-Urdaneta-7.png"
+               alt="Firma Mariale Urdaneta - NeuroWellness"
+               style="width:100%;max-width:1100px;height:auto;display:block;margin:0 auto;" />
+        </div>
+
+        <div style="max-width:600px;margin:0 auto;padding-top:1rem;border-top:1px solid #E6E2DE;">
+          <p style="font-size:.75rem;margin-bottom:.5rem;color:#4A4D53;text-align:center;">© 2025 Maria Alejandra Urdaneta. Todos los derechos reservados.</p>
+          <p style="font-size:.75rem;line-height:1.5;color:#4A4D53;text-align:center;">Este test y su metodología son propiedad intelectual protegida. Prohibida su reproducción total o parcial sin autorización expresa.</p>
+        </div>
+
+        <!-- Botón Reiniciar centrado -->
+        <div style="text-align:center;margin-top:2rem;">
+          <button class="btn btn-primary" onclick="restartTest()" style="padding:1rem 2rem;border-radius:.75rem;font-weight:600;font-size:1rem;background:#9B6D80;color:white;border:none;cursor:pointer;max-width:400px;width:100%;">
+            Reiniciar Test
+          </button>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
 
     <script>
         // Definición de preguntas por pilar (44 preguntas - 220 puntos totales)
@@ -958,16 +980,19 @@
         }
 
         function createRadarChart(results) {
-           const normalizedScores = pilares.map(p => {
-       const percentage = results[p].percentage;
-       return (percentage / 100) * 25;
-   });
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            
+            // Normalizar todos los pilares a escala de 25
+            const normalizedScores = pilares.map(p => {
+                const percentage = results[p].percentage;
+                return (percentage / 100) * 25;  // Convertir porcentaje a escala de 25
+            });
             
             const data = {
                 labels: pilares.map(p => pilarNames[p]),
                 datasets: [{
                     label: 'Tu Puntuación',
-                    data: pilares.map(p => results[p].score),
+                    data: normalizedScores,
                     backgroundColor: 'rgba(155, 109, 128, 0.2)',
                     borderColor: '#9B6D80',
                     borderWidth: 2,
@@ -1035,6 +1060,7 @@
             });
         }
 
+        
         function createPilarSummaries(results) {
             const container = document.getElementById('pilarSummaries');
             let html = '';
@@ -1042,6 +1068,10 @@
             pilares.forEach(pilar => {
                 const result = results[pilar];
                 const percentage = result.percentage;
+                
+                // NORMALIZAR A 25 PUNTOS
+                const normalizedScore = ((percentage / 100) * 25).toFixed(1);
+                
                 const zone = getZone(percentage);
                 const color = getZoneColor(zone);
                 const label = getZoneLabel(zone);
@@ -1054,7 +1084,7 @@
                                 <p style="font-size: 0.75rem; color: #4A4D53;">${pilarSubtitles[pilar]}</p>
                             </div>
                             <span style="font-size: 1.5rem; font-weight: bold; color: ${color};">
-                                ${result.score}/${result.maxScore}
+                                ${normalizedScore}/25
                             </span>
                         </div>
                         <div style="font-size: 0.75rem; font-weight: 600; color: ${color};">
@@ -1089,7 +1119,7 @@
                                         ${pilarNames[pilar]}
                                     </h2>
                                     <p style="font-size: 0.9rem; color: #4A4D53;">
-                                        ${result.score}/${result.maxScore} puntos • ${label}
+                                        ${((percentage / 100) * 25).toFixed(1)}/25 puntos • ${label}
                                     </p>
                                 </div>
                             </div>
@@ -1323,56 +1353,7 @@
             
             return analyses[pilar][zone];
         }
-// ============================================
-// CONEXIÓN CON GOOGLE DRIVE
-// ============================================
 
-// PEGA AQUI TU URL del Google Apps Script
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby00BujfYc0Nio1Xm0bf-bocBfAYkpkkWI5Nj3IwkcIP_tTG78I7YSDhU5i_TfhTvDG/exec';
-
-// Guardar función original
-const originalShowResults = showResults;
-
-// Sobrescribir showResults
-showResults = function() {
-    originalShowResults();
-    enviarResultadosAGoogleDrive();
-};
-
-function enviarResultadosAGoogleDrive() {
-    const results = calculateResults();
-    const totalOver100 = Math.round((results.total / 220) * 100);
-    
-    const datos = {
-        nombre: userName,
-        email: userEmail,
-        puntuacionTotal: totalOver100,
-        neuroImpulso: results.impulso.score,
-        neuroFocus: results.focus.score,
-        neuroBalance: results.balance.score,
-        neuroFlow: results.influencia.score,
-        puntosTotales: results.total,
-        respuestas: answers
-    };
-    
-    // Enviar a Google Drive
-    fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(datos)
-    })
-    .then(() => {
-        console.log('✅ Resultados guardados en Google Drive');
-    })
-    .catch((error) => {
-        console.error('❌ Error al guardar:', error);
-    });
-}
-
-// ============================================
         function restartTest() {
             answers = {};
             currentPilarIndex = 0;
