@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Test de Neurobienestar RESPIRAR - Descubre tu mapa personal de bienestar">
+    <title>Test de Neurobienestar | Neurowellness Learning</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #F7F4F1;
+            color: #4A4D53;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 0.75rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+       .header-gradient {
+    background: #14233A;
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 1.5rem 1.5rem 0 0;
+    text-align: center;
+}
+        .subtitle {
+            color: #E9C8C8;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tagline {
+            color: #E9C8C8;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        h1, h2 {
+            color: #14233A;
+            font-weight: 700;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .welcome-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #4A4D53;
+            margin-bottom: 1.5rem;
+        }
+        
+        .highlight-box {
+            background: #E9C8C8;
+            border-left: 4px solid #9B6D80;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1.5rem 0;
+        }
+        
+        .info-box {
+            background: #F7F4F1;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1.5rem 0;
+        }
+        
+        .info-box h3 {
+            color: #14233A;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .info-list li {
+            padding: 0.75rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        
+        .info-list li:before {
+            content: "●";
+            color: #D99A8F;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 0.2rem;
+        }
+        
+        .scale-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .scale-number {
+            font-weight: bold;
+            color: #14233A;
+            min-width: 2rem;
+        }
+        
+        .question-card {
+            background: white;
+            border: 2px solid #E6E2DE;
+            border-radius: 1rem;
+            padding: 1.25rem 1rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .question-card:hover {
+            border-color: #9B6D80;
+            box-shadow: 0 4px 12px rgba(155, 109, 128, 0.1);
+        }
+        
+        .question-number {
+            background: #E9C8C8;
+            color: #14233A;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .question-text {
+            color: #14233A;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+        
+        .scale-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        
+        .scale-option {
+            text-align: center;
+        }
+        
+        .scale-option input[type="radio"] {
+            display: none;
+        }
+        
+        .scale-option label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 4rem;
+            padding: 0.5rem 0.35rem;
+            border: 2px solid #E6E2DE;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.75rem;
+            background: white;
+            text-align: center;
+            line-height: 1.2;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        
+        .scale-option input[type="radio"]:checked + label {
+            background: #9B6D80;
+            border-color: #9B6D80;
+            color: white;
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(155, 109, 128, 0.3);
+        }
+        
+        .scale-option label:hover {
+            border-color: #9B6D80;
+            transform: translateY(-2px);
+        }
+        
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #9B6D80;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #7A5564;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(155, 109, 128, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #14233A;
+            border: 2px solid #E6E2DE;
+        }
+        
+        .btn-secondary:hover {
+            background: #F7F4F1;
+        }
+        
+        .progress-container {
+            background: #E6E2DE;
+            height: 0.5rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        
+        .progress-bar {
+            background: #9B6D80;
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+        
+        .section-header {
+            background: #14233A;
+            color: white;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-subtitle {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group label {
+            display: block;
+            color: #14233A;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid #E6E2DE;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #D99A8F;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .text-center {
+            text-align: left;
+        }
+        
+        .flex-gap {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem 0.75rem;
+                max-width: 100%;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.4rem;
+            }
+            
+            .card {
+                padding: 1.25rem 0.875rem;
+            }
+            
+            .header-gradient {
+                padding: 2rem 1rem;
+            }
+            
+            .scale-container {
+                gap: 0.4rem;
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .scale-option label {
+                padding: 0.625rem 0.375rem;
+                font-size: 0.7rem;
+                min-height: 3rem;
+                line-height: 1.15;
+            }
+            
+            .btn {
+                padding: 0.875rem 1.25rem;
+                font-size: 0.95rem;
+            }
+            
+            .question-text {
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+            
+            .question-card {
+                padding: 1rem 0.75rem;
+            }
+            
+            .question-number {
+                width: 2rem;
+                height: 2rem;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.75rem 0.5rem;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+            }
+            
+            h2 {
+                font-size: 1.2rem;
+            }
+            
+            .header-gradient {
+                padding: 1.5rem 0.75rem;
+            }
+            
+            .card {
+                padding: 1rem 0.625rem;
+                border-radius: 0.75rem;
+            }
+            
+            .scale-container {
+                grid-template-columns: 1fr;
+                gap: 0.4rem;
+            }
+            
+            .scale-option label {
+                padding: 0.875rem 0.75rem;
+                font-size: 0.8rem;
+                min-height: auto;
+                text-align: left;
+                justify-content: flex-start;
+            }
+            
+            .question-card {
+                padding: 0.875rem 0.625rem;
+            }
+            
+            .btn {
+                width: 100%;
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .question-number {
+                width: 1.75rem;
+                height: 1.75rem;
+                font-size: 0.8rem;
+                margin-right: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Pantalla de Bienvenida Única -->
+        <div id="welcomeScreen">
+            <div class="card" style="border-radius: 1.5rem; overflow: hidden; padding: 0;">
+             <div class="header-gradient">
+    <img src="https://i.postimg.cc/hjmxL9Lg/Logo-Neuro-Wellness-Blanco-(2).png"
+         alt="Logo NeuroWellness"
+         style="max-width: 200px; height: auto; display: block; margin: 10px auto 0;" />
+    
+    <p class="tagline" style="font-size: 1.2rem; margin-top: 0.25rem; color: #F0D6D0; font-weight: 500;">
+        Tu mapa hacia el bienestar integral
+    </p>
+</div>
+
+                <div style="padding: 2.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                        <span style="font-size: 2rem; text-align: center"></span>
+                        <h2>¡Bienvenida a tu Test de Neurobienestar!</h2>
+                    </div>
+
+                    <div style="space-y: 1.5rem; text-align: left;">
+                        <p class="welcome-text">
+                            Este no es un examen. Es una <strong>conversación contigo misma</strong>, un momento para pausar, observar y reconocer dónde estás ahora.
+                        </p>
+
+                        <p class="welcome-text">
+                            En los próximos minutos, vas a explorar cuatro dimensiones fundamentales de tu bienestar: 
+                            tu capacidad de acción, tu claridad de propósito, tu equilibrio emocional y la calidad de 
+                            tus relaciones.
+                        </p>
+
+                        <div class="highlight-box">
+                            <p style="color: #14233A; font-weight: 500;">
+                                ❤️ No hay respuestas correctas o incorrectas. Solo tu verdad en este momento.
+                            </p>
+                        </div>
+
+                        <p class="welcome-text">
+                            Al finalizar, recibirás un mapa personalizado que te mostrará tus fortalezas actuales 
+                            y las áreas donde puedes crecer.
+                        </p>
+
+                        <p class="welcome-text">
+                            Responde las preguntas que encontrarás a continuación con la mayor sinceridad posible. Requerirás de 8 a 10 minutos para completar el test.
+                        </p>
+
+                        <div class="input-group" style="margin-top: 2rem;">
+                            <label for="userName">Tu nombre: <span style="color: #EF4444;">*</span></label>
+                            <input type="text" id="userName" placeholder="Escribe tu nombre" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="userEmail">Tu correo electrónico: <span style="color: #EF4444;">*</span></label>
+                            <input type="email" id="userEmail" placeholder="tu@email.com" required>
+                        </div>
+
+                        <p style="color: #9B6D80; font-size: 0.9rem; margin-bottom: 1rem;">
+                            * Campos obligatorios
+                        </p>
+
+                        <button class="btn btn-primary" onclick="validateAndStartTest()" style="width: 100%; margin-top: 1rem;">
+                            Iniciar Test
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pantalla del Test -->
+        <div id="testScreen" class="hidden">
+            <div class="card">
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: #9B6D80; font-size: 0.9rem;">
+                        <span>Pilar <span id="currentPilar">1</span> de 4</span>
+                        <span><span id="answeredCount">0</span>/<span id="totalQuestions">11</span></span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                </div>
+
+              <div id="questionsContainer"></div>
+
+
+ 
+      
+
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button class="btn btn-secondary" onclick="previousPilar()" id="prevBtn" style="display: none;">
+                        ← Anterior
+                    </button>
+                    <button class="btn btn-primary" onclick="nextPilar()" id="nextBtn" style="flex: 1;" disabled>
+                        Siguiente →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+      
+
+                   
+    </div>
+<!-- Pantalla de Resultados -->
+<div id="resultsScreen" class="hidden">
+  <div style="max-width:1100px;margin:0 auto;background:white;border-radius:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.08);overflow:hidden;">
+
+    <!-- Header con puntuación -->
+    <div style="background:#14233A;padding:3rem 2rem;text-align:center;">
+      <img src="https://i.postimg.cc/hjmxL9Lg/Logo-Neuro-Wellness-Blanco-(2).png"
+           alt="Logo NeuroWellness"
+           style="max-width:200px;height:auto;display:block;margin:0 auto 1rem;" />
+      <h2 style="color:#E9C8C8;margin-bottom:1rem;">Resultados del Test</h2>
+
+      <h1 style="font-size:1.6rem;font-weight:700;margin-bottom:0.75rem;color:white;">
+        <span id="userNameDisplay"></span>, aquí está tu Mapa de Neurobienestar
+      </h1>
+      <p style="color:#E9C8C8;margin-bottom:2rem;">Tu punto de partida para la transformación</p>
+
+      <div style="background:#E9C8C8;padding:1.5rem;border-radius:1rem;max-width:520px;margin:0 auto;">
+        <p style="font-size:0.9rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#14233A;margin-bottom:0.5rem;">Puntuación Total</p>
+        <p style="font-size:3rem;font-weight:800;color:#14233A;">
+          <span id="totalScore">0</span><span style="font-size:1.2rem;opacity:.7;">/100</span>
+        </p>
+        <p style="font-size:.9rem;color:#2B2E33;margin-bottom:1rem;">puntos de neurobienestar</p>
+        <div id="overallMessage" style="border-top:2px solid #14233A;padding-top:1rem;margin-top:.5rem;text-align:left;"></div>
+      </div>
+    </div>
+
+    <!-- Contenido principal resultados -->
+    <div style="padding:3rem 2rem;">
+
+      <!-- Radar -->
+      <div style="background:#F7F4F1;border-radius:1rem;padding:2rem;margin-bottom:2rem;">
+        <h2 style="font-size:1.8rem;font-weight:700;text-align:center;color:#14233A;margin-bottom:2rem;">Tus 4 Pilares de Neurobienestar</h2>
+        <div style="display:flex;justify-content:center;margin-bottom:2rem;padding:2rem;">
+          <canvas id="radarChart" style="max-width:600px;max-height:600px;width:100%;"></canvas>
+        </div>
+
+        <div style="text-align:center;font-size:.9rem;color:#4A4D53;margin-bottom:1.5rem;">
+          <p style="font-weight:600;margin-bottom:1rem;">Cada pilar se evalúa de 0 a 25 puntos</p>
+          <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:.5rem;"><div style="width:1.25rem;height:1.25rem;background:#9DB2A2;border-radius:.25rem;"></div><span style="font-weight:500;">19–25: Fortaleza</span></div>
+            <div style="display:flex;align-items:center;gap:.5rem;"><div style="width:1.25rem;height:1.25rem;background:#D6C79A;border-radius:.25rem;"></div><span style="font-weight:500;">13–18: Oportunidad</span></div>
+            <div style="display:flex;align-items:center;gap:.5rem;"><div style="width:1.25rem;height:1.25rem;background:#D99A8F;border-radius:.25rem;"></div><span style="font-weight:500;">0–12: Prioridad</span></div>
+          </div>
+        </div>
+
+        <!-- Tarjetas resumen por pilar -->
+        <div id="pilarSummaries" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;"></div>
+      </div>
+
+      <!-- Instrucción -->
+      <div style="text-align:center;background:#E9C8C8;padding:1.5rem;border-radius:1rem;margin-bottom:2rem;">
+        <p style="font-size:1.05rem;font-weight:600;color:#14233A;">A continuación, haz clic sobre cada pilar para ver a detalle lo que significan tus resultados:</p>
+      </div>
+
+      <!-- Detalle expandible -->
+      <div id="detailedAnalysis"></div>
+
+      <!-- CTA -->
+      <div style="background:#14233A;color:white;padding:2rem;border-radius:1rem;text-align:center;margin-top:2rem;">
+        <h3 style="font-size:1.4rem;font-weight:800;margin-bottom:1rem;color:white;">
+          <span id="ctaName"></span>, has dado el primer paso más importante: conocer tu mapa
+        </h3>
+        <div style="max-width:600px;margin:0 auto 1.5rem;">
+          <p style="font-size:1.1rem;margin-bottom:0.75rem;color:white;line-height:1.7;font-weight:600;">
+            Tus resultados son el inicio, no el final.
+          </p>
+          <p style="font-size:1rem;margin-bottom:0.75rem;color:#E9C8C8;line-height:1.6;">
+            Porque tu cerebro funciona mejor cuando tiene dirección.
+          </p>
+          <p style="font-size:1rem;margin-bottom:1.5rem;color:#E9C8C8;line-height:1.6;">
+            Si quieres evitar volver a los mismos ciclos y transformar este insight en un plan real, escríbeme y vemos juntas si este programa encaja contigo.
+          </p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1rem;max-width:500px;margin:0 auto;">
+          <button class="btn" onclick="window.open('https://wa.me/34603777334?text=Hola%20Mariale,%20acabo%20de%20completar%20el%20test%20de%20neurobienestar%20y%20me%20gustaría%20una%20orientación%20personalizada', '_blank')" style="background:#9B6D80;color:white;padding:1rem 2rem;border-radius:.75rem;font-weight:600;font-size:1rem;width:100%;cursor:pointer;border:none;">
+            💬 Quiero mi orientación personalizada (WhatsApp)
+          </button>
+          <button class="btn" onclick="descargarPDF()" style="background:#E9C8C8;color:#14233A;padding:1rem 2rem;border-radius:.75rem;font-weight:600;font-size:1rem;width:100%;cursor:pointer;border:2px solid #9B6D80;">
+            📄 Descargar mis resultados en PDF
+          </button>
+        </div>
+      </div>
+      <!-- FIN del CTA azul -->
+
+      <!-- Imagen final (600x150px) -->
+      <div style="background:white;margin-top:2rem;padding:2rem;border-radius:1rem;">
+        <div style="width:100%;text-align:center;margin-bottom:1.5rem;">
+          <img src="https://i.postimg.cc/rmPTdfSW/Firma-Neuro-Wellness-Mariale-Urdaneta-(9).png"
+               alt="Firma Mariale Urdaneta - NeuroWellness Learning"
+               style="width:100%;max-width:600px;height:auto;display:block;margin:0 auto;" />
+        </div>
+
+        <div style="max-width:600px;margin:0 auto;padding-top:1rem;border-top:1px solid #E6E2DE;">
+          <p style="font-size:.75rem;margin-bottom:.5rem;color:#4A4D53;text-align:center;">© 2025 Maria Alejandra Urdaneta. Todos los derechos reservados.</p>
+          <p style="font-size:.75rem;line-height:1.5;color:#4A4D53;text-align:center;">Este test y su metodología son propiedad intelectual protegida. Prohibida su reproducción total o parcial sin autorización expresa.</p>
+        </div>
+        
+        <!-- Botón Reiniciar centrado -->
+        <div style="text-align:center;margin-top:2rem;">
+          <button class="btn btn-primary" onclick="restartTest()" style="padding:1rem 2rem;border-radius:.75rem;font-weight:600;font-size:1rem;background:#9B6D80;color:white;border:none;cursor:pointer;max-width:400px;width:100%;">
+            Reiniciar Test
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+    <script>
+        // ============================================
+        // CONFIGURACIÓN GENERAL
+        // ============================================
+        
+        let currentPilarIndex = 0;
+        let answers = {};
+        let userName = '';
+        let userEmail = '';
+
+        // ============================================
+        // PREGUNTAS ORGANIZADAS POR PILARES
+        // ============================================
+        
+        const questions = {
+            impulso: [
+                { id: 1, text: "Tengo la energía necesaria para completar mis tareas diarias", pilar: "impulso" },
+                { id: 2, text: "Siento que tengo control sobre las decisiones que tomo en mi vida", pilar: "impulso" },
+                { id: 3, text: "Logro llevar a cabo mis planes y proyectos personales", pilar: "impulso" },
+                { id: 4, text: "Me siento capaz de superar los obstáculos que se presentan", pilar: "impulso" },
+                { id: 5, text: "Cuando me propongo algo, generalmente lo logro", pilar: "impulso" },
+                { id: 6, text: "Me siento motivado/a para alcanzar mis objetivos", pilar: "impulso" },
+                { id: 7, text: "Tengo claridad sobre los pasos que debo seguir para avanzar en mis metas", pilar: "impulso" },
+                { id: 8, text: "Me siento seguro/a de mi capacidad para enfrentar nuevos desafíos", pilar: "impulso" },
+                { id: 9, text: "Puedo adaptarme fácilmente cuando las cosas no salen como espero", pilar: "impulso" },
+                { id: 10, text: "Confío en que mis esfuerzos me llevarán a resultados positivos", pilar: "impulso" },
+                { id: 11, text: "Me siento con la fuerza suficiente para iniciar nuevos proyectos", pilar: "impulso" }
+            ],
+            focus: [
+                { id: 12, text: "Tengo claridad sobre cuáles son mis prioridades en la vida", pilar: "focus" },
+                { id: 13, text: "Sé qué es lo que realmente me importa y qué quiero lograr", pilar: "focus" },
+                { id: 14, text: "Me siento alineado/a con mis valores y objetivos personales", pilar: "focus" },
+                { id: 15, text: "Puedo concentrarme fácilmente en lo que estoy haciendo sin distraerme", pilar: "focus" },
+                { id: 16, text: "Siento que mi vida tiene un propósito claro", pilar: "focus" },
+                { id: 17, text: "Mis acciones diarias están alineadas con mis metas a largo plazo", pilar: "focus" },
+                { id: 18, text: "Logro mantener mi atención en una tarea sin que mi mente divague", pilar: "focus" },
+                { id: 19, text: "Me resulta fácil tomar decisiones importantes en mi vida", pilar: "focus" },
+                { id: 20, text: "Siento que estoy avanzando hacia donde realmente quiero estar", pilar: "focus" },
+                { id: 21, text: "Tengo claridad sobre qué debo hacer cada día para acercarme a mis objetivos", pilar: "focus" },
+                { id: 22, text: "Mi mente está enfocada y no siento confusión respecto a lo que quiero", pilar: "focus" }
+            ],
+            balance: [
+                { id: 23, text: "Me siento emocionalmente estable la mayor parte del tiempo", pilar: "balance" },
+                { id: 24, text: "Puedo manejar el estrés sin que afecte mi bienestar emocional", pilar: "balance" },
+                { id: 25, text: "Logro mantener la calma cuando las cosas no salen como espero", pilar: "balance" },
+                { id: 26, text: "Mis emociones no me sobrepasan ni me hacen perder el control", pilar: "balance" },
+                { id: 27, text: "Tengo herramientas para regular mis emociones cuando me siento abrumado/a", pilar: "balance" },
+                { id: 28, text: "Me siento en paz conmigo mismo/a la mayor parte del día", pilar: "balance" },
+                { id: 29, text: "Logro recuperarme rápidamente después de una situación difícil", pilar: "balance" },
+                { id: 30, text: "Siento que tengo espacio mental para descansar y relajarme", pilar: "balance" },
+                { id: 31, text: "No siento ansiedad constante ni pensamientos intrusivos", pilar: "balance" },
+                { id: 32, text: "Puedo disfrutar el presente sin preocuparme excesivamente por el futuro", pilar: "balance" },
+                { id: 33, text: "Mi cuerpo y mi mente están en armonía", pilar: "balance" }
+            ],
+            influencia: [
+                { id: 34, text: "Siento que las personas a mi alrededor me valoran y respetan", pilar: "influencia" },
+                { id: 35, text: "Mis relaciones personales me aportan bienestar y apoyo", pilar: "influencia" },
+                { id: 36, text: "Puedo expresar mis ideas con confianza frente a otros", pilar: "influencia" },
+                { id: 37, text: "Me siento cómodo/a liderando o guiando a otras personas cuando es necesario", pilar: "influencia" },
+                { id: 38, text: "Tengo relaciones genuinas donde hay intercambio y apoyo mutuo", pilar: "influencia" },
+                { id: 39, text: "Siento que mis palabras o acciones tienen un impacto positivo en otros", pilar: "influencia" },
+                { id: 40, text: "Me resulta fácil conectar con otras personas y crear vínculos significativos", pilar: "influencia" },
+                { id: 41, text: "Mi presencia genera confianza y bienestar en los demás", pilar: "influencia" },
+                { id: 42, text: "Puedo comunicar mis emociones y necesidades de manera efectiva", pilar: "influencia" },
+                { id: 43, text: "Siento que aporto valor en mis relaciones personales y profesionales", pilar: "influencia" },
+                { id: 44, text: "Tengo una red de apoyo sólida en la que puedo confiar", pilar: "influencia" }
+            ]
+        };
+
+        const pilarNames = {
+            impulso: "NeuroImpulso",
+            focus: "NeuroFocus",
+            balance: "NeuroBalance",
+            influencia: "NeuroFlow"
+        };
+
+        const pilarSubtitles = {
+            impulso: "Acción y Ejecución",
+            focus: "Claridad y Propósito",
+            balance: "Equilibrio Emocional",
+            influencia: "Impacto y Conexión"
+        };
+
+        const pilarKeys = Object.keys(questions);
+
+        // ============================================
+        // VALIDACIÓN Y NAVEGACIÓN INICIAL
+        // ============================================
+
+        function validateAndStartTest() {
+            userName = document.getElementById('userName').value.trim();
+            userEmail = document.getElementById('userEmail').value.trim();
+
+            if (!userName || !userEmail) {
+                alert('Por favor, completa tu nombre y correo electrónico antes de continuar.');
+                return;
+            }
+
+            if (!isValidEmail(userEmail)) {
+                alert('Por favor, ingresa un correo electrónico válido.');
+                return;
+            }
+
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('testScreen').classList.remove('hidden');
+            
+            loadPilar(0);
+        }
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // ============================================
+        // CARGA DE PILARES
+        // ============================================
+
+        function loadPilar(index) {
+            const pilarKey = pilarKeys[index];
+            const pilarQuestions = questions[pilarKey];
+            
+            document.getElementById('currentPilar').textContent = index + 1;
+            document.getElementById('totalQuestions').textContent = pilarQuestions.length;
+            
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = `
+                <div class="section-header">
+                    <div class="section-title">${pilarNames[pilarKey]}</div>
+                    <div class="section-subtitle">${pilarSubtitles[pilarKey]}</div>
+                </div>
+            `;
+            
+            pilarQuestions.forEach((q, idx) => {
+                container.innerHTML += `
+                    <div class="question-card">
+                        <div class="question-text">
+                            <span class="question-number">${idx + 1}</span>
+                            <span>${q.text}</span>
+                        </div>
+                        <div class="scale-container">
+                            ${[1,2,3,4,5].map(val => `
+                                <div class="scale-option">
+                                    <input type="radio" name="q${q.id}" id="q${q.id}_${val}" value="${val}" onchange="updateProgress()">
+                                    <label for="q${q.id}_${val}">${getScaleLabel(val)}</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            updateProgress();
+            updateNavigationButtons();
+        }
+
+        function getScaleLabel(value) {
+            const labels = {
+                1: "Nunca o casi nunca",
+                2: "A veces",
+                3: "Con frecuencia",
+                4: "Casi siempre",
+                5: "Siempre"
+            };
+            return labels[value];
+        }
+
+        // ============================================
+        // NAVEGACIÓN ENTRE PILARES
+        // ============================================
+
+        function updateProgress() {
+            const pilarKey = pilarKeys[currentPilarIndex];
+            const pilarQuestions = questions[pilarKey];
+            let answered = 0;
+            
+            pilarQuestions.forEach(q => {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                if (selected) answered++;
+            });
+            
+            document.getElementById('answeredCount').textContent = answered;
+            const percentage = (answered / pilarQuestions.length) * 100;
+            document.getElementById('progressBar').style.width = percentage + '%';
+            
+            // Habilitar/deshabilitar botón siguiente
+            const nextBtn = document.getElementById('nextBtn');
+            const allAnswered = answered === pilarQuestions.length;
+            nextBtn.disabled = !allAnswered;
+            nextBtn.style.opacity = allAnswered ? '1' : '0.5';
+            nextBtn.style.cursor = allAnswered ? 'pointer' : 'not-allowed';
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.style.display = currentPilarIndex > 0 ? 'block' : 'none';
+            
+            if (currentPilarIndex === pilarKeys.length - 1) {
+                nextBtn.textContent = 'Ver Resultados';
+                nextBtn.onclick = finishTest;
+            } else {
+                nextBtn.textContent = 'Siguiente →';
+                nextBtn.onclick = nextPilar;
+            }
+        }
+
+        function previousPilar() {
+            saveCurrentAnswers();
+            if (currentPilarIndex > 0) {
+                currentPilarIndex--;
+                loadPilar(currentPilarIndex);
+                restoreAnswers();
+            }
+        }
+
+        function nextPilar() {
+            if (!validateCurrentPilar()) {
+                alert('Por favor, responde todas las preguntas antes de continuar.');
+                return;
+            }
+            
+            saveCurrentAnswers();
+            if (currentPilarIndex < pilarKeys.length - 1) {
+                currentPilarIndex++;
+                loadPilar(currentPilarIndex);
+                restoreAnswers();
+            }
+        }
+
+        function validateCurrentPilar() {
+            const pilarKey = pilarKeys[currentPilarIndex];
+            const pilarQuestions = questions[pilarKey];
+            
+            return pilarQuestions.every(q => {
+                return document.querySelector(`input[name="q${q.id}"]:checked`) !== null;
+            });
+        }
+
+        function saveCurrentAnswers() {
+            const pilarKey = pilarKeys[currentPilarIndex];
+            const pilarQuestions = questions[pilarKey];
+            
+            pilarQuestions.forEach(q => {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                if (selected) {
+                    answers[q.id] = parseInt(selected.value);
+                }
+            });
+        }
+
+        function restoreAnswers() {
+            const pilarKey = pilarKeys[currentPilarIndex];
+            const pilarQuestions = questions[pilarKey];
+            
+            pilarQuestions.forEach(q => {
+                if (answers[q.id]) {
+                    const radio = document.getElementById(`q${q.id}_${answers[q.id]}`);
+                    if (radio) radio.checked = true;
+                }
+            });
+            
+            updateProgress();
+        }
+
+        function finishTest() {
+            if (!validateCurrentPilar()) {
+                alert('Por favor, responde todas las preguntas antes de continuar.');
+                return;
+            }
+            
+            saveCurrentAnswers();
+            showResults();
+        }
+
+        // ============================================
+        // CÁLCULO DE RESULTADOS
+        // ============================================
+
+        function calculateResults() {
+            const results = {
+                impulso: { total: 0, count: 0 },
+                focus: { total: 0, count: 0 },
+                balance: { total: 0, count: 0 },
+                influencia: { total: 0, count: 0 }
+            };
+
+            Object.values(questions).flat().forEach(q => {
+                if (answers[q.id]) {
+                    results[q.pilar].total += answers[q.id];
+                    results[q.pilar].count++;
+                }
+            });
+
+            let totalGeneral = 0;
+            Object.keys(results).forEach(pilar => {
+                const maxScore = results[pilar].count * 5;
+                results[pilar].percentage = (results[pilar].total / maxScore) * 100;
+                totalGeneral += results[pilar].total;
+            });
+
+            results.total = totalGeneral;
+            return results;
+        }
+
+        // ============================================
+        // MOSTRAR RESULTADOS
+        // ============================================
+
+        function showResults() {
+            const results = calculateResults();
+            
+            document.getElementById('testScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.remove('hidden');
+            
+            document.getElementById('userNameDisplay').textContent = userName;
+            document.getElementById('ctaName').textContent = userName;
+            
+            const totalOver100 = Math.round((results.total / 220) * 100);
+            document.getElementById('totalScore').textContent = totalOver100;
+            
+            const overallMessage = document.getElementById('overallMessage');
+            if (totalOver100 >= 80) {
+                overallMessage.innerHTML = '<p style="color:#14233A;font-size:0.95rem;"><strong>¡Excelente!</strong> Tienes bases sólidas de bienestar. Ahora puedes optimizar y mantener este nivel con estrategias personalizadas.</p>';
+            } else if (totalOver100 >= 60) {
+                overallMessage.innerHTML = '<p style="color:#14233A;font-size:0.95rem;"><strong>Buen inicio.</strong> Tienes fortalezas importantes, pero hay pilares que necesitan atención para alcanzar tu máximo potencial.</p>';
+            } else {
+                overallMessage.innerHTML = '<p style="color:#14233A;font-size:0.95rem;"><strong>Punto de partida identificado.</strong> Tus resultados muestran áreas clave donde trabajar. Con el enfoque correcto, puedes transformar estos números.</p>';
+            }
+            
+            renderRadarChart(results);
+            renderPilarSummaries(results);
+            renderDetailedAnalysis(results);
+        }
+
+        // ============================================
+        // GRÁFICO RADAR
+        // ============================================
+
+        function renderRadarChart(results) {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        'NeuroImpulso',
+                        'NeuroFocus',
+                        'NeuroBalance',
+                        'NeuroFlow'
+                    ],
+                    datasets: [{
+                        label: 'Tu Neurobienestar',
+                        data: [
+                            results.impulso.percentage,
+                            results.focus.percentage,
+                            results.balance.percentage,
+                            results.influencia.percentage
+                        ],
+                        backgroundColor: 'rgba(155, 109, 128, 0.2)',
+                        borderColor: '#9B6D80',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#9B6D80',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                stepSize: 20,
+                                font: { size: 12 },
+                                color: '#4A4D53'
+                            },
+                            pointLabels: {
+                                font: { size: 14, weight: 'bold' },
+                                color: '#14233A'
+                            },
+                            grid: {
+                                color: '#E6E2DE'
+                            },
+                            angleLines: {
+                                color: '#E6E2DE'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // ============================================
+        // RESUMEN POR PILAR
+        // ============================================
+
+        function renderPilarSummaries(results) {
+            const container = document.getElementById('pilarSummaries');
+            container.innerHTML = '';
+            
+            Object.keys(results).forEach(pilar => {
+                if (pilar === 'total') return;
+                
+                const data = results[pilar];
+                const normalizedScore = ((data.percentage / 100) * 25).toFixed(1);
+                const { color, label, zone } = getScoreInfo(normalizedScore);
+                
+                container.innerHTML += `
+                    <div style="background:white;border-left:4px solid ${color};padding:1.25rem;border-radius:0.75rem;cursor:pointer;transition:all 0.3s;" 
+                         onclick="document.getElementById('detail-${pilar}').scrollIntoView({behavior:'smooth'})">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                            <h3 style="font-size:1.1rem;font-weight:700;color:#14233A;">${pilarNames[pilar]}</h3>
+                            <span style="font-size:1.4rem;font-weight:800;color:${color};">${normalizedScore}/25</span>
+                        </div>
+                        <p style="font-size:0.85rem;color:#4A4D53;margin-bottom:0.5rem;">${pilarSubtitles[pilar]}</p>
+                        <div style="background:${color};color:white;padding:0.4rem 0.75rem;border-radius:0.5rem;display:inline-block;font-size:0.8rem;font-weight:600;">
+                            ${label}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function getScoreInfo(score) {
+            if (score >= 19) return { color: '#9DB2A2', label: 'Fortaleza', zone: 'green' };
+            if (score >= 13) return { color: '#D6C79A', label: 'Oportunidad', zone: 'yellow' };
+            return { color: '#D99A8F', label: 'Prioridad', zone: 'red' };
+        }
+
+        // ============================================
+        // ANÁLISIS DETALLADO
+        // ============================================
+
+        function renderDetailedAnalysis(results) {
+            const container = document.getElementById('detailedAnalysis');
+            container.innerHTML = '';
+            
+            Object.keys(results).forEach(pilar => {
+                if (pilar === 'total') return;
+                
+                const data = results[pilar];
+                const normalizedScore = ((data.percentage / 100) * 25).toFixed(1);
+                const { color, label, zone } = getScoreInfo(normalizedScore);
+                const analysis = getAnalysis(pilar, zone);
+                
+                let bgColor = zone === 'green' ? '#F0F5F2' : zone === 'yellow' ? '#F9F7EF' : '#FDF5F4';
+                
+                container.innerHTML += `
+                    <div id="detail-${pilar}" style="background:${bgColor};border-radius:1rem;margin-bottom:1.5rem;border-left:6px solid ${color};overflow:hidden;">
+                        <!-- Header clickeable -->
+                        <div onclick="toggleDetail('${pilar}')" style="padding:2rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all 0.3s;">
+                            <div style="flex:1;">
+                                <h3 style="font-size:1.6rem;font-weight:800;color:#14233A;margin-bottom:0.25rem;">${pilarNames[pilar]}</h3>
+                                <p style="font-size:1rem;color:#4A4D53;">${pilarSubtitles[pilar]}</p>
+                            </div>
+                            <div style="text-align:right;">
+                                <div style="font-size:2rem;font-weight:800;color:${color};">${normalizedScore}/25</div>
+                                <div style="background:${color};color:white;padding:0.4rem 1rem;border-radius:0.5rem;font-size:0.85rem;font-weight:600;display:inline-block;margin-top:0.5rem;">
+                                    ${label}
+                                </div>
+                            </div>
+                            <div style="margin-left:1rem;">
+                                <svg id="arrow-${pilar}" style="width:2rem;height:2rem;transition:transform 0.3s;transform:rotate(0deg);" fill="${color}" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <!-- Contenido desplegable -->
+                        <div id="content-${pilar}" style="max-height:0;overflow:hidden;transition:max-height 0.5s ease-out;">
+                            <div style="padding:0 2rem 2rem;">
+                                <div style="background:white;padding:1.5rem;border-radius:0.75rem;margin-bottom:1rem;">
+                                    <h4 style="color:#14233A;font-weight:700;margin-bottom:0.75rem;font-size:1.1rem;">Qué te dicen tus resultados</h4>
+                                    <p style="color:#4A4D53;line-height:1.7;">${analysis.resultado}</p>
+                                </div>
+                                
+                                <div style="background:white;padding:1.5rem;border-radius:0.75rem;margin-bottom:1rem;">
+                                    <h4 style="color:#14233A;font-weight:700;margin-bottom:0.75rem;font-size:1.1rem;">Cómo se manifiesta en tu vida</h4>
+                                    <p style="color:#4A4D53;line-height:1.7;">${analysis.manifestacion}</p>
+                                </div>
+                                
+                                <div style="background:#F7F4F1;padding:1.5rem;border-radius:0.75rem;margin-bottom:1rem;border-left:4px solid ${color};">
+                                    <h4 style="color:#14233A;font-weight:700;margin-bottom:1rem;font-size:1.1rem;">Qué podrías empezar a trabajar por tu cuenta</h4>
+                                    <ul style="list-style:none;padding:0;margin:0;">
+                                        ${analysis.autocuidado.map(item => `
+                                            <li style="padding:0.5rem 0;padding-left:1.5rem;position:relative;color:#4A4D53;">
+                                                <span style="position:absolute;left:0;top:0.7rem;width:0.5rem;height:0.5rem;background:${color};border-radius:50%;"></span>
+                                                ${item}
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                                
+                                <div style="background:white;padding:1.5rem;border-radius:0.75rem;border-left:4px solid ${color};">
+                                    <h4 style="color:#14233A;font-weight:700;margin-bottom:0.75rem;font-size:1.1rem;">Cómo NeuroWellness Learning puede ayudarte a transformarlo</h4>
+                                    <p style="color:#4A4D53;line-height:1.7;">${analysis.programa}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        function toggleDetail(pilar) {
+            const content = document.getElementById(`content-${pilar}`);
+            const arrow = document.getElementById(`arrow-${pilar}`);
+            
+            if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+                content.style.maxHeight = '0';
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                arrow.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function getAnalysis(pilar, zone) {
+            const analyses = {
+                impulso: {
+                    green: {
+                        resultado: "Tu capacidad de acción es tu motor. Tienes claridad sobre lo que quieres y la determinación para lograrlo. Tu energía es sostenida y confías en tu capacidad de ejecución.",
+                        manifestacion: "Cumples tus compromisos contigo misma. No necesitas motivación externa constante porque tu impulso viene de adentro. Los demás te ven como alguien que hace que las cosas sucedan.",
+                        autocuidado: [
+                            "Mantén esta energía protegiéndola: establece límites claros y respeta tu ritmo para evitar agotamiento.",
+                            "Dedica tiempo a revisar tus metas y ajustarlas si es necesario. Tu claridad se mantiene con reflexión periódica.",
+                            "Comparte tus estrategias con otros. Enseñar lo que haces bien refuerza tu propio proceso."
+                        ],
+                        programa: "En el programa, aprenderás a optimizar tu energía con herramientas avanzadas de neurociencia para mantener tu nivel de impulso sin caer en el desgaste. Te ayudaremos a identificar y eliminar micropatrones que podrían estar limitando tu potencial sin que lo notes."
+                    },
+                    yellow: {
+                        resultado: "Tienes la capacidad de actuar, pero no siempre logras mantenerla. Tu energía es intermitente y, aunque sabes lo que debes hacer, a veces te cuesta empezar o terminar.",
+                        manifestacion: "Algunos días te sientes imparable, otros te cuesta levantarte de la cama. Tus proyectos avanzan a rachas y sientes que podrías estar haciendo más, pero algo te frena.",
+                        autocuidado: [
+                            "Empieza con rutinas pequeñas y sostenibles. No necesitas transformar tu vida de golpe, pero sí crear constancia.",
+                            "Identifica qué consume tu energía sin darte resultados y elimínalo.",
+                            "Usa recordatorios visuales de tus metas para mantener tu foco en lo que importa."
+                        ],
+                        programa: "Trabajaremos en reprogramar tus patrones de procrastinación y construir un sistema de ejecución basado en neurociencia aplicada. Aprenderás a usar tu dopamina a tu favor, en lugar de estar a merced de ella."
+                    },
+                    red: {
+                        resultado: "Tu capacidad de acción está bloqueada. Puede que sientas que no tienes control sobre tu vida o que te falte la energía para hacer lo que sabes que deberías. La motivación es escasa y la frustración constante.",
+                        manifestacion: "Empiezas muchas cosas pero no las terminas. Sientes que te falta fuerza de voluntad y que siempre estás dejando todo para después. Los proyectos se acumulan y el peso de lo no hecho crece.",
+                        autocuidado: [
+                            "Comienza con una acción mínima al día. No busques grandes cambios, busca movimiento.",
+                            "Identifica qué está drenando tu energía: puede ser perfeccionismo, miedo al fracaso o falta de descanso real.",
+                            "Pide apoyo. No tienes que hacerlo sola, y pedir ayuda no es debilidad."
+                        ],
+                        programa: "Este pilar será nuestra prioridad. Vamos a reconstruir tu sistema de acción desde cero, usando neuroplasticidad dirigida. Aprenderás a reactivar tu dopamina de forma sostenible y a romper los ciclos de parálisis que hoy te frenan."
+                    }
+                },
+                focus: {
+                    green: {
+                        resultado: "Tienes claridad sobre quién eres y hacia dónde vas. Tu mente está enfocada y tus decisiones están alineadas con tus valores. No te desvías fácilmente de tu camino.",
+                        manifestacion: "Sabes qué es importante y qué no. Puedes concentrarte en tus tareas sin que tu mente divague constantemente. Tus metas son claras y tus acciones coherentes con ellas.",
+                        autocuidado: [
+                            "Protege tu claridad evitando sobrecargas de información. No todo requiere tu atención.",
+                            "Haz pausas estratégicas. Tu enfoque se mantiene cuando tu mente descansa.",
+                            "Revisa periódicamente tus prioridades para asegurarte de que siguen alineadas contigo."
+                        ],
+                        programa: "Aprenderás técnicas avanzadas de optimización cognitiva para llevar tu enfoque al siguiente nivel. Trabajaremos en estrategias de flow y productividad profunda para que tu claridad se traduzca en resultados excepcionales."
+                    },
+                    yellow: {
+                        resultado: "Tienes momentos de claridad, pero también de confusión. A veces sabes lo que quieres, otras te sientes perdida. Tu mente tiende a dispersarse y te cuesta mantener el foco.",
+                        manifestacion: "Tienes muchas ideas pero pocas concretas. Empiezas proyectos con entusiasmo pero pierdes el rumbo. Te sientes abrumada por la cantidad de cosas que quieres hacer y no sabes por dónde empezar.",
+                        autocuidado: [
+                            "Reduce el ruido. Menos opciones te darán más claridad.",
+                            "Escribe tus pensamientos para ordenar tu mente. El caos interno se reduce cuando lo externalizas.",
+                            "Define una prioridad principal y comprométete con ella durante un tiempo específico."
+                        ],
+                        programa: "Trabajaremos en simplificar tu sistema mental y construir un mapa claro de tus prioridades. Aprenderás a tomar decisiones sin dudar y a mantener tu atención sin que tu mente te sabotee."
+                    },
+                    red: {
+                        resultado: "Tu mente está dispersa. No tienes claridad sobre lo que realmente quieres y esto te genera ansiedad y parálisis. Te sientes perdida y sin dirección clara.",
+                        manifestacion: "Saltas de una cosa a otra sin terminar nada. Tu mente está constantemente distraída y no logras concentrarte en nada importante. Sientes que estás en piloto automático sin saber hacia dónde vas.",
+                        autocuidado: [
+                            "Desconéctate del ruido digital. Tu mente necesita espacio para encontrarse.",
+                            "Haz una lista de tres cosas que realmente te importan. No más de tres.",
+                            "Dedica 10 minutos al día a estar contigo misma, sin distracciones."
+                        ],
+                        programa: "Vamos a reconstruir tu claridad desde cero. Usaremos técnicas de neuroplasticidad para entrenar tu atención y reprogramar los patrones que hoy te mantienen dispersa. Aprenderás a tomar decisiones con confianza y a crear un propósito que te guíe."
+                    }
+                },
+                balance: {
+                    green: {
+                        resultado: "Tu equilibrio emocional es tu ancla. Aunque la vida tenga altibajos, logras mantenerte centrada. Tienes herramientas para manejar el estrés y no dejas que tus emociones te desborden.",
+                        manifestacion: "Puedes estar tranquila incluso en medio del caos. Tienes paz interior y no dependes de que todo salga perfecto para estar bien. Cuando algo te afecta, sabes cómo regularte.",
+                        autocuidado: [
+                            "Mantén tus prácticas de regulación emocional. Lo que funciona hoy, necesita constancia.",
+                            "No te exijas ser perfecta. El balance no es estar siempre bien, es saber recuperarte cuando no lo estás.",
+                            "Comparte tus estrategias con otros. Ayudar a alguien más refuerza tu propio equilibrio."
+                        ],
+                        programa: "Aprenderás técnicas avanzadas de regulación emocional y resiliencia basadas en neurociencia. Trabajaremos en optimizar tu sistema nervioso para que tu equilibrio sea aún más sólido, incluso en situaciones extremas."
+                    },
+                    yellow: {
+                        resultado: "Tu equilibrio es frágil. Algunos días te sientes bien, otros te sientes abrumada. El estrés te afecta más de lo que te gustaría y tus emociones pueden dominarte.",
+                        manifestacion: "Pasas de estar bien a estar mal sin saber exactamente por qué. El estrés se acumula y no siempre sabes cómo manejarlo. Tus emociones te controlan más de lo que tú las controlas a ellas.",
+                        autocuidado: [
+                            "Identifica tus detonantes emocionales. Saber qué te desregula es el primer paso para controlarlo.",
+                            "Practica técnicas de respiración consciente. Tu sistema nervioso necesita pausas regulares.",
+                            "Establece límites claros con lo que te genera estrés. No todo merece tu energía."
+                        ],
+                        programa: "Trabajaremos en fortalecer tu sistema de regulación emocional usando herramientas de neurociencia aplicada. Aprenderás a identificar y manejar tus emociones antes de que te desborden, y a construir resiliencia duradera."
+                    },
+                    red: {
+                        resultado: "Tu sistema emocional está en alerta constante. Sientes ansiedad, agotamiento o vacío emocional. Tu equilibrio está roto y esto afecta todas las áreas de tu vida.",
+                        manifestacion: "Vives en modo supervivencia. Sientes que no puedes más, que el estrés te está consumiendo. Tus emociones te sobrepasan y no sabes cómo recuperar la calma.",
+                        autocuidado: [
+                            "Busca ayuda profesional si sientes que no puedes sola. La terapia no es una opción, es una necesidad.",
+                            "Prioriza el descanso real. Tu sistema nervioso necesita recuperarse.",
+                            "Reduce al mínimo tus obligaciones. No puedes llenar una taza rota, primero debes repararla."
+                        ],
+                        programa: "Este será nuestro foco principal. Vamos a reconstruir tu equilibrio emocional usando técnicas de regulación del sistema nervioso. Aprenderás a salir del modo supervivencia y a recuperar tu estabilidad emocional de forma sostenible."
+                    }
+                },
+                influencia: {
+                    green: {
+                        resultado: "Tus relaciones son una fuente de apoyo y bienestar. Tienes conexiones genuinas y sientes que tu presencia tiene un impacto positivo en otros. Tu comunicación es clara y efectiva.",
+                        manifestacion: "Las personas confían en ti y valoran tu opinión. Tienes relaciones profundas donde hay intercambio real. Tu forma de relacionarte genera bienestar en ti y en los demás.",
+                        autocuidado: [
+                            "Cuida la calidad de tus relaciones, no solo la cantidad.",
+                            "No tengas miedo de establecer límites. Las relaciones saludables los necesitan.",
+                            "Sigue cultivando tu capacidad de escucha activa. Es tu superpoder."
+                        ],
+                        programa: "Aprenderás a llevar tu capacidad de conexión al siguiente nivel. Trabajaremos en técnicas de comunicación avanzada, liderazgo consciente y cómo expandir tu impacto de forma auténtica."
+                    },
+                    yellow: {
+                        resultado: "Tus relaciones son inconsistentes. A veces sientes conexión, otras te sientes sola incluso rodeada de gente. Te cuesta expresar lo que necesitas y esto genera frustración.",
+                        manifestacion: "Tienes relaciones superficiales pero pocas profundas. Te cuesta comunicar tus emociones y a veces sientes que no te entienden. Dudas de tu capacidad de liderazgo o influencia.",
+                        autocuidado: [
+                            "Practica la vulnerabilidad. Las conexiones reales requieren autenticidad.",
+                            "Identifica relaciones que te drenan y establece límites.",
+                            "Trabaja en tu comunicación emocional. Decir lo que sientes no es debilidad."
+                        ],
+                        programa: "Trabajaremos en desarrollar tu capacidad de conexión genuina y comunicación efectiva. Aprenderás a expresar tus necesidades sin miedo y a construir relaciones que te nutran realmente."
+                    },
+                    red: {
+                        resultado: "Tus relaciones son una fuente de dolor o vacío. Te sientes desconectada, incomprendida o sola. Te cuesta confiar y expresarte con autenticidad.",
+                        manifestacion: "Evitas el contacto profundo por miedo a ser vulnerable. Sientes que nadie te entiende realmente. Tus relaciones son superficiales o tóxicas.",
+                        autocuidado: [
+                            "Empieza con una persona segura. No necesitas arreglar todas tus relaciones de golpe.",
+                            "Busca espacios donde puedas ser tú misma sin juicio.",
+                            "Trabaja en tu autocompasión. La forma en que te tratas a ti misma define cómo permites que te traten."
+                        ],
+                        programa: "Vamos a reconstruir tu capacidad de conexión desde cero. Trabajaremos en sanar patrones de apego, desarrollar tu confianza relacional y aprender a comunicarte de forma auténtica y efectiva."
+                    }
+                }
+            };
+
+            return analyses[pilar][zone];
+        }
+
+        // ============================================
+        // REINICIAR TEST
+        // ============================================
+
+        function restartTest() {
+            if (confirm('¿Estás segura de que quieres reiniciar el test? Se perderán todos los resultados actuales.')) {
+                currentPilarIndex = 0;
+                answers = {};
+                userName = '';
+                userEmail = '';
+                
+                document.getElementById('userName').value = '';
+                document.getElementById('userEmail').value = '';
+                
+                document.getElementById('resultsScreen').classList.add('hidden');
+                document.getElementById('welcomeScreen').classList.remove('hidden');
+            }
+        }
+
+        // ============================================
+        // DESCARGAR PDF
+        // ============================================
+
+        async function descargarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            
+            const results = calculateResults();
+            const totalOver100 = Math.round((results.total / 220) * 100);
+            
+            // Función para agregar pie de página en todas las páginas
+            function addFooter(pageNum) {
+                doc.setFontSize(7);
+                doc.setTextColor(100, 100, 100);
+                doc.text('© 2025 Maria Alejandra Urdaneta. Todos los derechos reservados.', 105, 287, { align: 'center' });
+                doc.text('Este test y su metodología son propiedad intelectual protegida.', 105, 291, { align: 'center' });
+                if (pageNum) {
+                    doc.text(`Página ${pageNum}`, 105, 294, { align: 'center' });
+                }
+            }
+            
+            // ============================================
+            // PÁGINA 1: PORTADA
+            // ============================================
+            
+            // Fondo azul oscuro
+            doc.setFillColor(20, 35, 58);
+            doc.rect(0, 0, 210, 297, 'F');
+            
+            // Logo real
+            try {
+                const logoUrl = 'https://i.postimg.cc/hjmxL9Lg/Logo-Neuro-Wellness-Blanco-(2).png';
+                const logoImg = await fetch(logoUrl)
+                    .then(res => res.blob())
+                    .then(blob => new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.readAsDataURL(blob);
+                    }));
+                doc.addImage(logoImg, 'PNG', 55, 30, 100, 30);
+            } catch(e) {
+                console.log('No se pudo cargar el logo');
+            }
+            
+            // Título principal
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(28);
+            doc.setFont(undefined, 'bold');
+            doc.text('Tu Mapa de', 105, 110, { align: 'center' });
+            doc.text('Neurobienestar', 105, 125, { align: 'center' });
+            
+            // Subtítulo
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(233, 200, 200);
+            doc.text('Resultados personalizados para', 105, 145, { align: 'center' });
+            
+            // Nombre del usuario
+            doc.setFontSize(20);
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(255, 255, 255);
+            doc.text(userName, 105, 160, { align: 'center' });
+            
+            // Fecha
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(233, 200, 200);
+            const fecha = new Date().toLocaleDateString('es-ES', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            doc.text(fecha, 105, 175, { align: 'center' });
+            
+            // Puntuación destacada
+            doc.setFillColor(233, 200, 200);
+            doc.roundedRect(55, 190, 100, 45, 3, 3, 'F');
+            
+            doc.setTextColor(20, 35, 58);
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.text('PUNTUACIÓN TOTAL', 105, 203, { align: 'center' });
+            
+            doc.setFontSize(42);
+            doc.setFont(undefined, 'bold');
+            doc.text(`${totalOver100}`, 105, 222, { align: 'center' });
+            
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'normal');
+            doc.text('/100', 125, 222);
+            
+            // Pie de página
+            addFooter(1);
+            
+            // ============================================
+            // PÁGINAS 2-5: ANÁLISIS DETALLADO
+            // ============================================
+            
+            // Cargar imagen final una sola vez antes del loop
+            let finalImg = null;
+            try {
+                const finalImageUrl = 'https://i.postimg.cc/3R0JnhG9/Title-Page-(3).png';
+                finalImg = await fetch(finalImageUrl)
+                    .then(res => res.blob())
+                    .then(blob => new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.readAsDataURL(blob);
+                    }));
+            } catch(e) {
+                console.log('No se pudo cargar la imagen final');
+            }
+            
+            const pilares = ['impulso', 'focus', 'balance', 'influencia'];
+            
+            pilares.forEach((pilar, index) => {
+                doc.addPage();
+                
+                const data = results[pilar];
+                const normalizedScore = ((data.percentage / 100) * 25).toFixed(1);
+                const { color, label, zone } = getScoreInfo(normalizedScore);
+                const analysis = getAnalysis(pilar, zone);
+                
+                // Header del pilar (color claro)
+                if (zone === 'green') doc.setFillColor(220, 230, 225);
+                else if (zone === 'yellow') doc.setFillColor(245, 240, 220);
+                else doc.setFillColor(250, 230, 225);
+                doc.rect(0, 0, 210, 35, 'F');
+                
+                doc.setTextColor(20, 35, 58);
+                doc.setFontSize(18);
+                doc.setFont(undefined, 'bold');
+                doc.text(pilarNames[pilar], 20, 15);
+                
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                doc.text(pilarSubtitles[pilar], 20, 22);
+                
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text(`${normalizedScore}/25`, 180, 20, { align: 'right' });
+                
+                doc.setFontSize(9);
+                doc.setFont(undefined, 'bold');
+                if (zone === 'green') doc.setTextColor(157, 178, 162);
+                else if (zone === 'yellow') doc.setTextColor(214, 199, 154);
+                else doc.setTextColor(217, 154, 143);
+                doc.text(label, 180, 28, { align: 'right' });
+                
+                let yPos = 45;
+                
+                // Qué te dicen tus resultados
+                doc.setTextColor(20, 35, 58);
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'bold');
+                doc.text('Qué te dicen tus resultados', 20, yPos);
+                yPos += 7;
+                
+                doc.setFontSize(9);
+                doc.setFont(undefined, 'normal');
+                const resultadoLines = doc.splitTextToSize(analysis.resultado, 170);
+                doc.text(resultadoLines, 20, yPos);
+                yPos += resultadoLines.length * 5 + 8;
+                
+                // Cómo se manifiesta en tu vida
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'bold');
+                doc.text('Cómo se manifiesta en tu vida', 20, yPos);
+                yPos += 7;
+                
+                doc.setFontSize(9);
+                doc.setFont(undefined, 'normal');
+                const manifestacionLines = doc.splitTextToSize(analysis.manifestacion, 170);
+                doc.text(manifestacionLines, 20, yPos);
+                yPos += manifestacionLines.length * 5 + 8;
+                
+                // Qué podrías empezar a trabajar por tu cuenta
+                doc.setFillColor(247, 244, 241);
+                const boxHeight = analysis.autocuidado.length * 8 + 15;
+                doc.roundedRect(15, yPos - 5, 180, boxHeight, 2, 2, 'F');
+                
+                doc.setTextColor(20, 35, 58);
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'bold');
+                doc.text('Qué podrías empezar a trabajar por tu cuenta', 20, yPos + 2);
+                yPos += 9;
+                
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'normal');
+                analysis.autocuidado.forEach(item => {
+                    if (zone === 'green') doc.setFillColor(157, 178, 162);
+                    else if (zone === 'yellow') doc.setFillColor(214, 199, 154);
+                    else doc.setFillColor(217, 154, 143);
+                    doc.circle(22, yPos - 1, 1.5, 'F');
+                    const itemLines = doc.splitTextToSize(item, 160);
+                    doc.text(itemLines, 26, yPos);
+                    yPos += itemLines.length * 4 + 3;
+                });
+                
+                yPos += 5;
+                
+                // Cómo NeuroWellness Learning puede ayudarte
+                if (yPos > 240) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+                
+                if (zone === 'green') doc.setFillColor(220, 230, 225);
+                else if (zone === 'yellow') doc.setFillColor(245, 240, 220);
+                else doc.setFillColor(250, 230, 225);
+                doc.roundedRect(15, yPos - 5, 180, 40, 2, 2, 'F');
+                
+                // Borde izquierdo
+                if (zone === 'green') doc.setFillColor(157, 178, 162);
+                else if (zone === 'yellow') doc.setFillColor(214, 199, 154);
+                else doc.setFillColor(217, 154, 143);
+                doc.rect(15, yPos - 5, 4, 40, 'F');
+                
+                doc.setTextColor(20, 35, 58);
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'bold');
+                doc.text('Cómo NeuroWellness Learning puede ayudarte a transformarlo', 24, yPos + 2);
+                yPos += 9;
+                
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'normal');
+                const programaLines = doc.splitTextToSize(analysis.programa, 165);
+                doc.text(programaLines, 24, yPos);
+                
+                // Pie de página
+                addFooter(index + 2);
+                
+                // Si es el último pilar (influencia), agregar imagen final
+                if (index === 3 && finalImg) {
+                    // Agregar imagen al final de la página actual (proporción 1080x1920 = 9:16)
+                    // Imagen de 50mm ancho x 89mm alto, centrada
+                    const imgWidth = 50;
+                    const imgHeight = 89;
+                    const xPos = (210 - imgWidth) / 2; // Centrado horizontalmente
+                    
+                    // Si no hay espacio en la página actual, agregar en nueva página
+                    if (yPos + imgHeight + 10 > 280) {
+                        doc.addPage();
+                        doc.addImage(finalImg, 'PNG', xPos, 20, imgWidth, imgHeight);
+                    } else {
+                        doc.addImage(finalImg, 'PNG', xPos, yPos + 10, imgWidth, imgHeight);
+                    }
+                }
+            });
+            
+            // Guardar PDF
+            doc.save(`Resultados-Neurobienestar-${userName.replace(/\s+/g, '-')}.pdf`);
+        }
+
+        // ============================================
+        // CONEXIÓN CON GOOGLE DRIVE
+        // ============================================
+
+        // URL de tu Google Apps Script
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMtNnX9UHagQ5Fqk-j2NAAVVcq7ADEV1dH5bPaKlM9ep3gxYT2kgr2lm0tK_OboulO/exec';
+
+        // Modificar showResults para enviar datos automáticamente
+        const originalShowResults = showResults;
+        showResults = function() {
+            originalShowResults();
+            enviarResultadosAGoogleDrive();
+        };
+
+        function enviarResultadosAGoogleDrive() {
+            const results = calculateResults();
+            const totalOver100 = Math.round((results.total / 220) * 100);
+            
+            const datos = {
+                nombre: userName,
+                email: userEmail,
+                puntuacionTotal: totalOver100,
+                neuroImpulso: ((results.impulso.percentage / 100) * 25).toFixed(1),
+                neuroFocus: ((results.focus.percentage / 100) * 25).toFixed(1),
+                neuroBalance: ((results.balance.percentage / 100) * 25).toFixed(1),
+                neuroFlow: ((results.influencia.percentage / 100) * 25).toFixed(1),
+                puntosTotales: results.total,
+                respuestas: answers
+            };
+            
+            // Enviar a Google Drive
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(datos)
+            })
+            .then(() => {
+                console.log('✅ Resultados guardados en Google Drive');
+            })
+            .catch((error) => {
+                console.error('❌ Error al guardar:', error);
+            });
+        }
+    </script>
+</body>
+</html>
